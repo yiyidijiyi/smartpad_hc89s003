@@ -1,0 +1,176 @@
+C51 COMPILER V9.56.0.0   HC89S003_12BITSPWM                                                06/25/2018 23:31:45 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE HC89S003_12BITSPWM
+OBJECT MODULE PLACED IN .\Objects\hc89s003_12bitspwm.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE src\hc89s003_12bitspwm.c OPTIMIZE(8,SPEED) BROWSE INCDIR(./inc) DEFINE(M
+                    -CU_HC89S_CORE) DEBUG OBJECTEXTEND PRINT(.\Listings\hc89s003_12bitspwm.lst) OBJECT(.\Objects\hc89s003_12bitspwm.obj)
+
+line level    source
+
+   1          /*
+   2          * 文件说明：hc89s003f4 12位pwm模块，包括pwm0，1,2及互补的3路输出
+   3          */
+   4          #include "HC89S003F4.h"
+   5          #include "hc89s003_12bitspwm.h"
+   6          #include "hc89s003_gpio.h"
+   7          
+   8          
+   9          
+  10          /*
+  11          * 输入：d-pwm占空比
+  12          * 输出：
+  13          * 功能：设置pwm1模块的占空比
+  14          */
+  15          void setPwm0Duty(uint8_t p)
+  16          {
+  17   1          uint32_t tmp;
+  18   1          tmp = PWM0PH;
+  19   1          tmp <<= 8;
+  20   1          tmp += PWM0PL;
+  21   1          
+  22   1          if(p > 100)
+  23   1          {
+  24   2              p = 100;
+  25   2          }
+  26   1          
+  27   1          tmp = tmp * p / 100;
+  28   1          
+  29   1          PWM0DH = (uint8_t)(tmp >> 8) & 0x0f;
+  30   1          PWM0DL = (uint8_t)tmp;
+  31   1      }
+  32          
+  33          /*
+  34          * 输入：d-pwm占空比
+  35          * 输出：
+  36          * 功能：设置pwm1模块的占空比
+  37          */
+  38          void setPwm1Duty(uint8_t p)
+  39          {
+  40   1          uint32_t tmp;
+  41   1          tmp = PWM1PH;
+  42   1          tmp <<= 8;
+  43   1          tmp += PWM1PL;
+  44   1          
+  45   1          if(p > 100)
+  46   1          {
+  47   2              p = 100;
+  48   2          }
+  49   1          
+  50   1          tmp = tmp * p / 100;
+  51   1          
+  52   1          PWM1DH = (uint8_t)(tmp >> 8) & 0x0f;
+  53   1          PWM1DL = (uint8_t)tmp;
+  54   1      }
+C51 COMPILER V9.56.0.0   HC89S003_12BITSPWM                                                06/25/2018 23:31:45 PAGE 2   
+
+  55          
+  56          /*
+  57          * 输入：d-pwm占空比
+  58          * 输出：
+  59          * 功能：设置pwm2模块的占空比
+  60          */
+  61          void setPwm2Duty(uint8_t p)
+  62          {
+  63   1          uint32_t tmp;
+  64   1          tmp = PWM2PH;
+  65   1          tmp <<= 8;
+  66   1          tmp += PWM2PL;
+  67   1          
+  68   1          if(p > 100)
+  69   1          {
+  70   2              p = 100;
+  71   2          }
+  72   1          tmp = tmp * p / 100;
+  73   1          
+  74   1          PWM2DH = (uint8_t)(tmp >> 8) & 0x0f;
+  75   1          PWM2DL = (uint8_t)tmp;
+  76   1      }
+  77          
+  78          /*
+  79          * 输入：
+  80          * 输出：
+  81          * 功能：pwm0模块配置
+  82          */
+  83          void pwm0Config(void)
+  84          {
+  85   1          DISABLE_PWM(PWM0EN);
+  86   1          
+  87   1          PWM0C = PWM_OUT_LL | PWM_CLK_FOSC_1;
+  88   1          PWM0EN |= PWM_OUT_EN;
+  89   1          
+  90   1          // 时钟4M， 周期1k，周期值为4000 - 1
+  91   1          PWM0PH = 0x0F;
+  92   1          PWM0PL = 0x9f;
+  93   1          
+  94   1          setPwm0Duty(50);
+  95   1          
+  96   1          ENABLE_PWM(PWM0EN);
+  97   1      }
+  98          
+  99          /*
+ 100          * 输入：
+ 101          * 输出：
+ 102          * 功能：pwm1模块配置
+ 103          */
+ 104          void pwm1Config(void)
+ 105          {
+ 106   1          DISABLE_PWM(PWM1EN);
+ 107   1          
+ 108   1          PWM1C = PWM_OUT_LL | PWM_CLK_FOSC_1;
+ 109   1          PWM1EN |= PWM_OUT_EN;
+ 110   1          
+ 111   1          // 时钟4M， 周期1k，周期值为4000 - 1
+ 112   1          PWM1PH = 0x0F;
+ 113   1          PWM1PL = 0x9f;
+ 114   1          
+ 115   1          setPwm1Duty(50);
+ 116   1          
+C51 COMPILER V9.56.0.0   HC89S003_12BITSPWM                                                06/25/2018 23:31:45 PAGE 3   
+
+ 117   1          ENABLE_PWM(PWM1EN);
+ 118   1      }
+ 119          
+ 120          /*
+ 121          * 输入：
+ 122          * 输出：
+ 123          * 功能：pwm2模块配置
+ 124          */
+ 125          void pwm2Config(void)
+ 126          {
+ 127   1          DISABLE_PWM(PWM2EN);
+ 128   1          
+ 129   1          PWM2C = PWM_OUT_LL | PWM_CLK_FOSC_1;
+ 130   1          PWM2EN |= PWM_OUT_EN;
+ 131   1          
+ 132   1          // 时钟4M， 周期1k，周期值为4000 - 1
+ 133   1          PWM2PH = 0x0F;
+ 134   1          PWM2PL = 0x9f;
+ 135   1          
+ 136   1          setPwm2Duty(50);
+ 137   1          
+ 138   1          ENABLE_PWM(PWM2EN);
+ 139   1      }
+ 140          
+ 141          
+ 142          
+ 143          
+ 144          
+ 145          
+ 146          
+ 147          
+ 148          // end of file
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    414    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      12
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

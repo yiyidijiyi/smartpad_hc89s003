@@ -1,0 +1,1 @@
+"src\hc89s003_12bitspwm.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(./inc) DEFINE (MCU_HC89S_CORE) DEBUG OBJECTEXTEND PRINT(.\Listings\hc89s003_12bitspwm.lst) OBJECT(.\Objects\hc89s003_12bitspwm.obj)
